@@ -9,10 +9,10 @@ const {
 } = require('../../controllers/userController');
 
 // /api/students
-router.route('/').get(getStudents).post(createStudent);
+router.route('/').get(getUsers).post(createUser);
 
 // /api/students/:studentId
-router.route('/:studentId').get(getSingleStudent).delete(deleteStudent);
+router.route('/:userId').get(getSingleUser).delete(deleteUser);
 
 // /api/students/:studentId/assignments
 router.route('/:userId/friends').post(addFriend);
