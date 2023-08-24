@@ -6,7 +6,7 @@ module.exports = {
   // Get all users
   async getUsers(req, res) {
     try {
-      const users = await User.find().populate('thoughts').populate('friends')
+      const users = await User.find().populate('thoughts').populate('friends');
      res.json(users);
     } catch (err) {
       console.log(err);
@@ -17,19 +17,15 @@ module.exports = {
   async getSingleUser(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.userId })
-        .select('-__v')
-        .popoulate('friends')
+        .populate('friends')
         .populate('thoughts')
-        .lean();
+      
 
       if (!user) {
         return res.status(404).json({ message: 'No user with that ID' });
       }
 
-      res.json({
-        student,
-        grade: await grade(req.params.studentId),
-      });
+      res.json(user);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

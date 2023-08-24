@@ -1,4 +1,4 @@
-const {Thought, User } = require('../models');
+const { Thought, User } = require('../models');
 const { ObjectId } = require('mongoose').Types;
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
   // Get a thought
   async getSingleThought(req, res) {
     try {
-      const thought = await Thought.findOne({ _id: req.params.userId })
+      const thought = await Thought.findOne({ _id: req.params.thoughtId })
         .populate('reactions')
         .select('-__v');
 
@@ -31,11 +31,12 @@ module.exports = {
   async createThought(req, res) {
     try {
       console.log('You are adding a thought');
-      console.log(req.body);
+      //console.log(req.body);
+      const thought = await Thought.create(req.body)
       const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $addToSet: { thoughts: req.body } },
-        { runValidators: true, new: true }
+        { _id: req.body.userId },
+        { $push: { thoughts: thought._id } },
+        { new: true }
       );
 
       if (!user) {
@@ -52,9 +53,16 @@ module.exports = {
   // Delete a thought and remove from user
   async deleteThought(req, res) {
     try {
+      const thought = await Thought.findOneAndRemove(
+        { _id: req.params.thoughtId })
+      if (!thought) {
+        return res
+          .status(404)
+          .json({ message: 'No user thought with that ID :(' });
+      }
       const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $pull: {thought: { thoughtId: req.params.thougthId } } },
+        { thoughts: req.params.thoughtId },
+        { $pull: { thought: { thoughtId: req.params.thougthId } } },
         { runValidators: true, new: true }
       );
 
