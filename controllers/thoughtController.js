@@ -14,9 +14,10 @@ module.exports = {
   // Get a thought
   async getSingleThought(req, res) {
     try {
-      const thought = await Thought.findOne({ _id: req.params.thoughtId })
+      const thought = await Thought.findOne({ _id: new ObjectId(req.params.thoughtId) })
         .populate('reactions')
-        .select('-__v');
+        .select('-__v')
+        
 
       if (!thought) {
         return res.status(404).json({ message: 'No thought with that ID' });
@@ -35,7 +36,7 @@ module.exports = {
       const thought = await Thought.create(req.body)
       const user = await User.findOneAndUpdate(
         { _id: req.body.userId },
-        { $push: { thoughts: thought._id } },
+        { $push: { thoughts: thought } },
         { new: true }
       );
 
@@ -45,7 +46,7 @@ module.exports = {
           .json({ message: 'No user found with that ID :(' })
       }
 
-      res.json(user);
+      res.json({ message: 'Thought added!' });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -72,7 +73,7 @@ module.exports = {
           .json({ message: 'No user found with that ID :(' });
       }
 
-      res.json(user);
+      res.json({message: "Thought deleted!"});
     } catch (err) {
       res.status(500).json(err);
     }
