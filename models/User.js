@@ -1,41 +1,47 @@
-const { Schema, model } = require('mongoose');
+const { Schema, Types, model } = require('mongoose');
 
 // Schema to create User model
 const userSchema = new Schema(
   {
-    first: String,
-    last: String,
-    age: Number,
-    applications: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Application',
-      },
-    ],
-  },
-  {
-    // Mongoose supports two Schema options to transform Objects after querying MongoDb: toJSON and toObject.
-    // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
-    toJSON: {
-      virtuals: true,
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+      trimmed: true,
     },
-    id: false,
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: function (v) {
+          return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
+        },
+        message: props => `${props.value} is not a valid email!!`
+      }
+    },
+    thoughts: [{type: Schema.Types.ObjectId, ref: 'thought'}],
+
+    friends: [{type: Schema.Types.ObjectId, ref: 'user' }],
+  },
+{
+  toJSON: {
+    virtuals: true,
+    getters: true,
+    },
+  id: false,
   }
 );
 
 // Create a virtual property `fullName` that gets and sets the user's full name
 userSchema
-  .virtual('fullName')
+  .virtual('friendCount')
   // Getter
   .get(function () {
-    return `${this.first} ${this.last}`;
-  })
-  // Setter to set the first and last name
-  .set(function (v) {
-    const first = v.split(' ')[0];
-    const last = v.split(' ')[1];
-    this.set({ first, last });
+    return this.friends.length;
   });
+  // Setter to set the first and last name
+ 
 
 // Initialize our User model
 const User = model('user', userSchema);
