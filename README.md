@@ -50,9 +50,7 @@ Users can perform the following actions using an endcpoint tester like Insomnia:
 
     See the following demo video for more detail:
 
-https://drive.google.com/file/d/1Tq7rj-k7wnhfHO6sRh6vAR1MLxlB6t_J/view
-
-
+https://drive.google.com/file/d/1Tq7rj-k7wnhfHO6sRh6vAR1MLxlB6t_J/view?usp=sharing
 
 
 
