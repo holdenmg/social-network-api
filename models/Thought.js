@@ -16,7 +16,7 @@ const thoughtSchema = new Schema(
       type: String,
       required: true,
     },
-    reactions: [reactionSchema]
+    reactions: [reactionSchema],
   },
   {
     toJSON: {
@@ -26,7 +26,7 @@ const thoughtSchema = new Schema(
   
   }
 );
-thoughtSchema.virtual('reationCount').get(function () {
+thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });
 const Thought = model('thought', thoughtSchema);

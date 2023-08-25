@@ -46,10 +46,10 @@ module.exports = {
       const user = await User.findOneAndRemove({ _id: req.params.userId });
 
       if (!user) {
-        return res.status(404).json({ message: 'No such student exists' })
+        return res.status(404).json({ message: 'No such user exists' })
       }
 
-      res.json({ message: 'Student successfully deleted' });
+      res.json({ message: 'User successfully deleted' });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -63,37 +63,37 @@ module.exports = {
       console.log(req.body);
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $addToSet: { friends: req.body } },
+        { $addToSet: { friends: friend } },
         { runValidators: true, new: true }
       );
 
-      if (!user) {
+      if (!friend) {
         return res
           .status(404)
           .json({ message: 'No user found with that ID :(' })
       }
 
-      res.json(user);
+      res.json(friend);
     } catch (err) {
       res.status(500).json(err);
     }
   },
-  // Remove friend from a user
+  // Delete reaction and and remove from thought
   async removeFriend(req, res) {
     try {
-      const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $pull: { friend: { friendId: req.body.friendId } } },
+      const thought = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $pull: { reactions: { reactionId: new ObjectId(req.params.reactionId) } } },
         { runValidators: true, new: true }
       );
 
-      if (!user) {
+      if (!thought) {
         return res
           .status(404)
-          .json({ message: 'No user found with that ID :(' });
+          .json({ message: 'No thought found with that ID :(' });
       }
 
-      res.json(user);
+      res.json(thought);
     } catch (err) {
       res.status(500).json(err);
     }
