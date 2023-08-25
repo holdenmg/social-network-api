@@ -84,7 +84,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Delete reaction and and remove from thought
+  // Remove a friend
   async removeFriend(req, res) {
     try {
       const user = await User.findOneAndUpdate(
