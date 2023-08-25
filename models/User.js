@@ -40,7 +40,7 @@ userSchema
   .get(function () {
     return this.friends.length;
   });
-  // Setter to set the first and last name
+
  
 
 // Initialize our User model

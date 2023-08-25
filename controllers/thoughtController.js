@@ -73,7 +73,7 @@ module.exports = {
           .json({ message: 'No user found with that ID :(' });
       }
 
-      res.json({message: "Thought deleted!"});
+      res.json(user);
     } catch (err) {
       res.status(500).json(err);
     }
